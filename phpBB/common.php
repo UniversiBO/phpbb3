@@ -16,6 +16,16 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+if (in_array(@$_SERVER['REMOTE_ADDR'], array(
+    '127.0.0.1',
+    '127.0.1.1',
+    '::1',
+))) {
+    define('SF_ENV', 'dev');
+} else {
+    define('SF_ENV', 'prod');
+}
+
 require($phpbb_root_path . 'includes/startup.' . $phpEx);
 
 if (file_exists($phpbb_root_path . 'config.' . $phpEx))

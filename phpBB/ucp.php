@@ -38,55 +38,30 @@ $template->assign_var('S_IN_UCP', true);
 $module = new p_master();
 $default = false;
 
+$sfPrefix = SF_ENV === 'dev' ? '/app_dev.php/' : '/';
 // Basic "global" modes
 switch ($mode)
 {
 	case 'activate':
-		$module->load('ucp', 'activate');
-		$module->display($user->lang['UCP_ACTIVATE']);
-
-		redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
-	break;
-
-	case 'resend_act':
-		$module->load('ucp', 'resend');
-		$module->display($user->lang['UCP_RESEND']);
-	break;
-
-	case 'sendpassword':
-		$module->load('ucp', 'remind');
-		$module->display($user->lang['UCP_REMIND']);
-	break;
-
-	case 'register':
-		if ($user->data['is_registered'] || isset($_REQUEST['not_agreed']))
-		{
-			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
-		}
-
-		$module->load('ucp', 'register');
-		$module->display($user->lang['REGISTER']);
-	break;
-
-	case 'confirm':
-		$module->load('ucp', 'confirm');
-	break;
-
+        case 'confirm':
+        case 'resend_act':
+        case 'sendpassword':
+        case 'register':
 	case 'login':
 		if ($user->data['is_registered'])
 		{
 			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 		}
-
-		login_box(request_var('redirect', "index.$phpEx"));
+                
+                header('Location: '. $sfPrefix .'login');
+                exit;
 	break;
-
+        case 'delete_cookies':
 	case 'logout':
 		if ($user->data['user_id'] != ANONYMOUS && isset($_GET['sid']) && !is_array($_GET['sid']) && $_GET['sid'] === $user->session_id)
 		{
-			$user->session_kill();
-			$user->session_begin();
-			$message = $user->lang['LOGOUT_REDIRECT'];
+                    header('Location: '. $sfPrefix .'prelogout');
+                    exit;	
 		}
 		else
 		{
@@ -101,85 +76,8 @@ switch ($mode)
 
 	case 'terms':
 	case 'privacy':
-
-		$message = ($mode == 'terms') ? 'TERMS_OF_USE_CONTENT' : 'PRIVACY_POLICY';
-		$title = ($mode == 'terms') ? 'TERMS_USE' : 'PRIVACY';
-
-		if (empty($user->lang[$message]))
-		{
-			if ($user->data['is_registered'])
-			{
-				redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
-			}
-
-			login_box();
-		}
-
-		$template->set_filenames(array(
-			'body'		=> 'ucp_agreement.html')
-		);
-
-		// Disable online list
-		page_header($user->lang[$title], false);
-
-		$template->assign_vars(array(
-			'S_AGREEMENT'			=> true,
-			'AGREEMENT_TITLE'		=> $user->lang[$title],
-			'AGREEMENT_TEXT'		=> sprintf($user->lang[$message], $config['sitename'], generate_board_url()),
-			'U_BACK'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
-			'L_BACK'				=> $user->lang['BACK_TO_LOGIN'],
-		));
-
-		page_footer();
-
-	break;
-
-	case 'delete_cookies':
-
-		// Delete Cookies with dynamic names (do NOT delete poll cookies)
-		if (confirm_box(true))
-		{
-			$set_time = time() - 31536000;
-
-			foreach ($_COOKIE as $cookie_name => $cookie_data)
-			{
-				// Only delete board cookies, no other ones...
-				if (strpos($cookie_name, $config['cookie_name'] . '_') !== 0)
-				{
-					continue;
-				}
-
-				$cookie_name = str_replace($config['cookie_name'] . '_', '', $cookie_name);
-
-				// Polls are stored as {cookie_name}_poll_{topic_id}, cookie_name_ got removed, therefore checking for poll_
-				if (strpos($cookie_name, 'poll_') !== 0)
-				{
-					$user->set_cookie($cookie_name, '', $set_time);
-				}
-			}
-
-			$user->set_cookie('track', '', $set_time);
-			$user->set_cookie('u', '', $set_time);
-			$user->set_cookie('k', '', $set_time);
-			$user->set_cookie('sid', '', $set_time);
-
-			// We destroy the session here, the user will be logged out nevertheless
-			$user->session_kill();
-			$user->session_begin();
-
-			meta_refresh(3, append_sid("{$phpbb_root_path}index.$phpEx"));
-
-			$message = $user->lang['COOKIES_DELETED'] . '<br /><br />' . sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$phpbb_root_path}index.$phpEx") . '">', '</a>');
-			trigger_error($message);
-		}
-		else
-		{
-			confirm_box(false, 'DELETE_COOKIES', '');
-		}
-
-		redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
-
-	break;
+            header('Location: '. $sfPrefix .'regolamento');
+            exit;
 
 	case 'switch_perm':
 
