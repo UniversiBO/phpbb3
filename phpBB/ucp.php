@@ -58,20 +58,8 @@ switch ($mode)
 	break;
         case 'delete_cookies':
 	case 'logout':
-		if ($user->data['user_id'] != ANONYMOUS && isset($_GET['sid']) && !is_array($_GET['sid']) && $_GET['sid'] === $user->session_id)
-		{
-                    header('Location: '. $sfPrefix .'prelogout');
-                    exit;	
-		}
-		else
-		{
-			$message = ($user->data['user_id'] == ANONYMOUS) ? $user->lang['LOGOUT_REDIRECT'] : $user->lang['LOGOUT_FAILED'];
-		}
-		meta_refresh(3, append_sid("{$phpbb_root_path}index.$phpEx"));
-
-		$message = $message . '<br /><br />' . sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$phpbb_root_path}index.$phpEx") . '">', '</a> ');
-		trigger_error($message);
-
+            header('Location: '. $sfPrefix .'prelogout');
+            exit;
 	break;
 
 	case 'terms':
