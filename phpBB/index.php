@@ -15,6 +15,15 @@
 * @ignore
 */
 define('IN_PHPBB', true);
+if (in_array(@$_SERVER['REMOTE_ADDR'], array(
+    '127.0.0.1',
+    '::1',
+))) {
+    define('SF_ENV', 'dev');
+} else {
+    define('SF_ENV', 'prod');
+}
+
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
