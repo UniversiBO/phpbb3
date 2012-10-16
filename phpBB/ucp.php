@@ -53,7 +53,8 @@ switch ($mode)
 			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 		}
                 
-                header('Location: '. $sfPrefix .'login');
+                $wreply = isset($_SERVER['HTTP_REFERER']) ? '?wreply='.$_SERVER['HTTP_REFERER'] : '';
+                header('Location: '. $sfPrefix .'login'.$wreply);
                 exit;
 	break;
         case 'delete_cookies':
