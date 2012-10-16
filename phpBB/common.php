@@ -16,7 +16,7 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-$key = array_key_exists('X-Forwarded-For', $_SERVER) ? 'X-Forwarded-For' : 'REMOTE_ADDR';
+$key = array_key_exists($key = 'HTTP_X_FORWARDED_FOR', $_SERVER) ? $key : 'REMOTE_ADDR';
 
 if (in_array(@$_SERVER[$key], array(
     '127.0.0.1',
