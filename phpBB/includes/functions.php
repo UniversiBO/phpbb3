@@ -4560,7 +4560,7 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		}
 	}
         
-        $upn = isset($_SESSION['upn'] ? $_SESSION['upn'] : 'nome.cognome@unibo.it';
+        $upn = isset($_SESSION['phpbb_upn']) ? $_SESSION['phpbb_upn'] : 'nome.cognome@unibo.it';
 
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
