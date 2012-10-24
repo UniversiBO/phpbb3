@@ -4398,7 +4398,7 @@ function phpbb_http_login($param)
 */
 function page_header($page_title = '', $display_online_list = true, $item_id = 0, $item = 'forum')
 {
-	global $db, $config, $template, $SID, $_SID, $_EXTRA_URL, $user, $auth, $phpEx, $phpbb_root_path;
+	global $db, $config, $template, $SID, $_SID, $_EXTRA_URL, $user, $auth, $phpEx, $phpbb_root_path, $idp_info;
 
 	if (defined('HEADER_INC'))
 	{
@@ -4559,6 +4559,9 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 			$s_search_hidden_fields[$url_param[0]] = $url_param[1];
 		}
 	}
+        
+        $upn = isset($_SESSION['shibbolethClaims']['eppn']) ? 
+        $_SESSION['shibbolethClaims']['eppn'] : 'nome.cognome@unibo.it';
 
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
@@ -4596,6 +4599,8 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		'U_MEMBERLIST'			=> append_sid("{$phpbb_root_path}memberlist.$phpEx"),
 		'U_VIEWONLINE'			=> ($auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel')) ? append_sid("{$phpbb_root_path}viewonline.$phpEx") : '',
 		'U_LOGIN_LOGOUT'		=> $u_login_logout,
+                'U_IDP_INFO'                    => $idp_info,
+                'U_UPN'                         => $upn,
 		'U_INDEX'				=> append_sid("{$phpbb_root_path}index.$phpEx"),
 		'U_SEARCH'				=> append_sid("{$phpbb_root_path}search.$phpEx"),
 		'U_REGISTER'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=register'),
