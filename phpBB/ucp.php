@@ -39,7 +39,7 @@ $module = new p_master();
 $default = false;
 
 $sfPrefix = SF_ENV === 'dev' ? '/app_dev.php/' : '/';
-$wreply = isset($_SERVER['HTTP_REFERER']) ? '?wreply='.$_SERVER['HTTP_REFERER'] : '';
+$wreply = isset($_SERVER['HTTP_REFERER']) ? '?wreply='.urlencode($_SERVER['HTTP_REFERER']) : '';
 // Basic "global" modes
 switch ($mode)
 {
