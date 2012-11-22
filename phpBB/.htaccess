@@ -19,3 +19,7 @@ Deny from All
 </Files>
 
 SetEnv https on
+
+RewriteEngine On
+RewriteBase /forum
+RewriteRule ^profile.php memberlist.php [R=302,QSA]
