@@ -54,7 +54,7 @@ switch ($mode)
 			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 		}
                 
-                header('Location: '. $sfPrefix .'login'.$wreply);
+                header('Location: '. $sfPrefix .'forumlogin'.$wreply);
                 exit;
 	break;
         case 'delete_cookies':
