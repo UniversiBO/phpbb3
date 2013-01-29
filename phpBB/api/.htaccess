@@ -1,0 +1,9 @@
+RewriteEngine On
+
+RewriteBase /forum/api
+RewriteRule ^.*$ index.php
+
+Order Deny,Allow
+Deny From All
+
+Allow From 127.0.0.1
