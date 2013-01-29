@@ -34,6 +34,10 @@ $app->post('/forum', function(Request $request) use ($forum){
     $forum_data['forum_name'] = $request->get('name', '');
     $forum_data['forum_desc'] = $request->get('description', '');
     $forum_data['forum_rules'] = $request->get('rules', '');
+    
+    if(empty($forum_data['forum_name'])) {
+        throw new InvalidArgumentException('Empty forum name');
+    }
 
     $errors = $forum->update_forum_data($forum_data);
     $count = count($errors);
@@ -48,4 +52,5 @@ $app->get('/forum/{id}', function($id) use($forum) {
     return create_json_response($forum->get_forum_info($id));
 });
 
+$app['debug'] = true;
 $app->run();
