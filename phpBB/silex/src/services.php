@@ -1,17 +1,11 @@
 <?php
 
-$app['acp.forums'] = $app->share(function(){
-    global $phpbb_root_path, $phpEx;
-    
-    require_once $phpbb_root_path . 'includes/acp/acp_forums.'.$phpEx;
-    
-    return new acp_forums();
-});
+foreach(array('forums') as $acpService) {
+    $app['acp.'.$acpService] = $app->share(function() use ($acpService) {
+        global $phpbb_root_path, $phpEx;
 
-$app['acp.users'] = $app->share(function(){
-    global $phpbb_root_path, $phpEx;
-    
-    require_once $phpbb_root_path . 'includes/acp/acp_users.'.$phpEx;
-    
-    return new acp_users();
-});
+        require_once $phpbb_root_path . 'includes/acp/acp_' . $acpService.'.'.$phpEx;
+
+        return new acp_forums();
+    });
+}
