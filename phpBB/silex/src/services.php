@@ -9,3 +9,7 @@ foreach(array('forums') as $acpService) {
         return new acp_forums();
     });
 }
+
+$app['db'] = function() { 
+    return $GLOBALS['db'];
+};
