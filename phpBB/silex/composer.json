@@ -1,0 +1,11 @@
+{
+    "require": {
+        "php": ">=5.3.3",
+        "silex/silex": "1.0.*",
+        "symfony/monolog-bridge": "~2.2"
+    },
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "minimum-stability": "dev"
+}
