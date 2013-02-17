@@ -33,11 +33,16 @@ $user->get('/{username}', function(Application $app, $username){
 });
 
 $user->post('/', function(Application $app, Request $request) {
+    $param = $request->request;
+    
     $userData = array(
-        
+        'username'   => $param->get('username') ,
+        'user_email' => $param->get('email')    ,
+        'group_id'   => $param->get('group_id') ,
+        'user_type'  => $param->get('type')     ,
     );
     
-    user_add($userData);
+    return $app->json(user_add($userData));
 });
 
 $user->before(function() {
