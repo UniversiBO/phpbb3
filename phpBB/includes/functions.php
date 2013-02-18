@@ -4398,7 +4398,7 @@ function phpbb_http_login($param)
 */
 function page_header($page_title = '', $display_online_list = true, $item_id = 0, $item = 'forum')
 {
-	global $db, $config, $template, $SID, $_SID, $_EXTRA_URL, $user, $auth, $phpEx, $phpbb_root_path, $idp_info;
+	global $db, $config, $template, $SID, $_SID, $_EXTRA_URL, $user, $auth, $phpEx, $phpbb_root_path, $idp_info, $analytics_id;
 
 	if (defined('HEADER_INC'))
 	{
@@ -4682,6 +4682,7 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		'T_ICONS'				=> $config['icons_path'],
 		'T_RANKS'				=> $config['ranks_path'],
 		'T_UPLOAD'				=> $config['upload_path'],
+                'T_ANALYTICS_ID'                => $analytics_id,
 
 		'SITE_LOGO_IMG'			=> $user->img('site_logo'),
 
