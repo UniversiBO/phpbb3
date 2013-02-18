@@ -6,7 +6,8 @@ foreach(array('forums') as $acpService) {
 
         require_once $phpbb_root_path . 'includes/acp/acp_' . $acpService.'.'.$phpEx;
 
-        return new acp_forums();
+        $class = 'acp_'.$acpService;
+        return new $class();
     });
 }
 
