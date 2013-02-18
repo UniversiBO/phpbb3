@@ -8,7 +8,7 @@ $forum->get('/{id}', function($id) use($app) {
     return $app->json($app['acp.forums']->get_forum_info($id));
 })->assert('id', '\d+');
 
-$forum->post('/', function(Request $request) use ($app){
+$forum->post('', function(Request $request) use ($app){
     $forum_data['prune_days'] = $forum_data['prune_viewed'] = $forum_data['prune_freq'] = 0;
     $forum_data['forum_topics_per_page'] = 0;
     
