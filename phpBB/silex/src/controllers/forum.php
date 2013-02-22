@@ -47,7 +47,13 @@ $forum->post('', function(Request $request) use ($app){
     $errors = $app['acp.forums']->update_forum_data($forum_data);
     $count = count($errors);
     if($count > 0) {
-        throw new InvalidArgumentException($count.' invalid parameters');
+        $response = $app->json(array(
+            'status' => 'error',
+            'errors' => $errors
+        ));
+        $response->setStatusCode(500);
+        
+        return $response;
     }
     
     return $app->json($forum_data);
