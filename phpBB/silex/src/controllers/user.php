@@ -52,4 +52,4 @@ $userc->before(function() {
 
 $userc->assert('id', '\d+');
 
-$app->mount('/user', $user);
+$app->mount('/user', $userc);
