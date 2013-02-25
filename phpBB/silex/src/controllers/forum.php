@@ -30,6 +30,33 @@ EOT;
     return $app->json($rows);
 });
 
+$forum->put('{id}/children/order', function(Request $request, $id) use ($app) {
+    $db = $app['db'];
+    $db->sql_query('SELECT * FROM ' . FORUMS_TABLE . ' WHERE parent_id = '.$id. ' ORDER BY left_id');
+    
+    $rows = array();
+    while(false !== ($row = $db->sql_fetchrow())) {
+        $rows[] = $row;
+    }
+    
+    $swap = function(&$a, &$b) use ($app){
+        $app['acp.forums']->move_forum_by($b);
+        
+        $c = $a;
+        $a = $b;
+        $b = $c;
+    };
+    
+    $compare = function($a, $b) {
+        return strcasecmp($a['forum_name'], $b['forum_name']);
+    };
+    
+    $sort = new Universibo\Sorting\BubbleSort($compare, $swap);
+    $sort->sort($rows);
+    
+    return $app->json($rows);
+});
+
 $forum->post('', function(Request $request) use ($app){
     $forum_data['prune_days'] = $forum_data['prune_viewed'] = $forum_data['prune_freq'] = 0;
     $forum_data['forum_topics_per_page'] = 0;
