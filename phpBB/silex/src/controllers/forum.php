@@ -30,31 +30,59 @@ EOT;
     return $app->json($rows);
 });
 
-$forum->put('{id}/children/order', function(Request $request, $id) use ($app) {
+$forum->put('{id}/children/order', function($id) use ($app) {
     $db = $app['db'];
-    $db->sql_query('SELECT * FROM ' . FORUMS_TABLE . ' WHERE parent_id = '.$id. ' ORDER BY left_id');
-    
-    $rows = array();
-    while(false !== ($row = $db->sql_fetchrow())) {
-        $rows[] = $row;
-    }
-    
-    $swap = function(&$a, &$b) use ($app){
-        $app['acp.forums']->move_forum_by($b);
-        
-        $c = $a;
-        $a = $b;
-        $b = $c;
-    };
     
     $compare = function($a, $b) {
         return strcasecmp($a['forum_name'], $b['forum_name']);
     };
     
-    $sort = new Universibo\Sorting\BubbleSort($compare, $swap);
-    $sort->sort($rows);
+    $getRows = function() use ($db, $id, $compare) {
+        $db->sql_query('SELECT * FROM ' . FORUMS_TABLE . ' WHERE parent_id = '.$id. ' ORDER BY left_id');
+
+        $rows = array();
+        $i = 0;
+        while(false !== ($row = $db->sql_fetchrow())) {
+            $rows[] = array(
+                'position'   => $i++,
+                'parent_id'  => $row['parent_id'],
+                'forum_name' => $row['forum_name'],
+                'left_id'    => $row['left_id'],
+                'right_id'   => $row['right_id']
+            );
+        }
+        
+        usort($rows, $compare);
+        
+        $maxDelta = 0;
+        $maxI = null;
+        
+        foreach($rows as $i => $row) {
+            $rows[$i]['delta'] = $delta = $row['position'] - $i;
+            
+            if(($deltax = abs($delta)) > $maxDelta) {
+                $maxI = $i;
+                $maxDelta = $deltax;
+            }
+        }
+        
+        return array('rows' => $rows, 'maxI' => $maxI);
+    };
     
-    return $app->json($rows);
+    $result = $getRows();
+    
+    while($result['maxI'] !== null) {
+        $forum = $result['rows'][$result['maxI']];
+
+        $action = $forum['delta'] > 0 ? 'move_up' : 'move_down';
+        $steps  = abs($forum['delta']);
+        
+        $app['acp.forums']->move_forum_by($forum, $action, $steps);
+        
+        $result = $getRows();
+    }
+    
+    return $app->json($result['rows']);
 });
 
 $forum->post('', function(Request $request) use ($app){
