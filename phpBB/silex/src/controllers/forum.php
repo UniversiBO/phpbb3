@@ -69,9 +69,20 @@ $forum->put('{id}/children/order', function($id) use ($app) {
         return array('rows' => $rows, 'maxI' => $maxI);
     };
     
+    $sorted = function(array $rows) use ($compare) {
+        $n = count($rows);
+        for($i=1; $i<$n; ++$i) {
+            if($compare($rows[$i-1], $rows[$i]) > 0) {
+                return false;
+            }
+        }
+        
+        return true;
+    };
+    
     $result = $getRows();
     
-    while($result['maxI'] !== null) {
+    while(!$sorted($result['rows'])) {
         $forum = $result['rows'][$result['maxI']];
 
         $action = $forum['delta'] > 0 ? 'move_up' : 'move_down';
