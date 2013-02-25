@@ -72,7 +72,7 @@ $forum->put('{id}/children/order', function($id) use ($app) {
     $sorted = function(array $rows) use ($compare) {
         $n = count($rows);
         for($i=1; $i<$n; ++$i) {
-            if($compare($rows[$i-1], $rows[$i]) > 0) {
+            if($compare($rows[$i-1], $rows[$i]) != 0) {
                 return false;
             }
         }
